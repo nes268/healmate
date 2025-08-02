@@ -1,0 +1,167 @@
+/* Language Page Styles */
+.language-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.language-container {
+  background-color: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 2rem;
+  width: 100%;
+  max-width: 42rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.language-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.language-icon {
+  width: 5rem;
+  height: 5rem;
+  background-color: #4f46e5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.icon-svg {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: white;
+}
+
+.language-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.language-subtitle {
+  font-size: 1.125rem;
+  color: #6b7280;
+}
+
+.language-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.language-btn {
+  padding: 1.5rem;
+  border: none;
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+  transform: scale(1);
+  text-align: center;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.language-btn:hover {
+  transform: scale(1.05);
+}
+
+.flag {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.language-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Language-specific button colors */
+.english-btn {
+  background-color: #2563eb;
+}
+
+.english-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.hindi-btn {
+  background-color: #ea580c;
+}
+
+.hindi-btn:hover {
+  background-color: #c2410c;
+}
+
+.tamil-btn {
+  background-color: #16a34a;
+}
+
+.tamil-btn:hover {
+  background-color: #15803d;
+}
+
+.bengali-btn {
+  background-color: #9333ea;
+}
+
+.bengali-btn:hover {
+  background-color: #7c3aed;
+}
+
+.telugu-btn {
+  background-color: #dc2626;
+}
+
+.telugu-btn:hover {
+  background-color: #b91c1c;
+}
+
+.gujarati-btn {
+  background-color: #ca8a04;
+}
+
+.gujarati-btn:hover {
+  background-color: #a16207;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .language-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .language-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .language-title {
+    font-size: 1.5rem;
+  }
+  
+  .language-subtitle {
+    font-size: 1rem;
+  }
+} 

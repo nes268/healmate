@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './login.css';
 
 const Login: React.FC = () => {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Logging in with:', { mobile, password });
-    // Redirect or handle login
+    // After successful login, redirect to language page
+    navigate('/language');
   };
 
   return (
@@ -41,7 +44,10 @@ const Login: React.FC = () => {
           <button type="submit">Login</button>
         </form>
         <div className="signup-link">
-          Don't have an account? <a href="/signup">Sign Up</a>
+          Don't have an account? <Link to="/signup">Sign Up</Link>
+        </div>
+        <div className="language-link">
+          <Link to="/language">Change Language</Link>
         </div>
       </div>
     </div>
