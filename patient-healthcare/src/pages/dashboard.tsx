@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import './dashboard.css';
 
 const Dashboard: React.FC = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('');
-  const [activeModule, setActiveModule] = useState<string>('dashboard');
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+     const [selectedLanguage, setSelectedLanguage] = useState<string>('');
+   const [activeModule, setActiveModule] = useState<string>('dashboard');
 
   useEffect(() => {
     // Get the selected language from localStorage
@@ -36,36 +35,29 @@ const Dashboard: React.FC = () => {
               <p>Manage your healthcare needs efficiently</p>
             </div>
             
-            <div className="quick-stats">
-              <div className="stat-card">
-                <div className="stat-icon">📊</div>
-                <div className="stat-info">
-                  <h3>5</h3>
-                  <p>Upcoming Appointments</p>
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon">💊</div>
-                <div className="stat-info">
-                  <h3>3</h3>
-                  <p>Active Prescriptions</p>
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon">🏥</div>
-                <div className="stat-info">
-                  <h3>12</h3>
-                  <p>Total Visits</p>
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon">💰</div>
-                <div className="stat-info">
-                  <h3>$150</h3>
-                  <p>Pending Payments</p>
-                </div>
-              </div>
-            </div>
+                         <div className="quick-stats">
+               <div className="stat-card">
+                 <div className="stat-icon">📊</div>
+                 <div className="stat-info">
+                   <h3>5</h3>
+                   <p>Upcoming Appointments</p>
+                 </div>
+               </div>
+               <div className="stat-card">
+                 <div className="stat-icon">💊</div>
+                 <div className="stat-info">
+                   <h3>3</h3>
+                   <p>Active Prescriptions</p>
+                 </div>
+               </div>
+               <div className="stat-card">
+                 <div className="stat-icon">🏥</div>
+                 <div className="stat-info">
+                   <h3>12</h3>
+                   <p>Total Visits</p>
+                 </div>
+               </div>
+             </div>
 
             <div className="recent-activity">
               <h3>Recent Activity</h3>
@@ -387,16 +379,10 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard-layout">
       {/* Sidebar */}
-      <div className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
-        <div className="sidebar-header">
-          <h2>🏥 Healthcare</h2>
-          <button 
-            className="sidebar-toggle"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            {sidebarOpen ? '◀' : '▶'}
-          </button>
-        </div>
+             <div className="sidebar">
+                 <div className="sidebar-header">
+           <h2>🏥 Healthcare</h2>
+         </div>
         
         <nav className="sidebar-nav">
           {sidebarModules.map((module) => (
@@ -405,25 +391,25 @@ const Dashboard: React.FC = () => {
               className={`sidebar-item ${activeModule === module.id ? 'active' : ''}`}
               onClick={() => setActiveModule(module.id)}
             >
-              <span className="sidebar-icon">{module.icon}</span>
-              {sidebarOpen && <span className="sidebar-text">{module.name}</span>}
+                             <span className="sidebar-icon">{module.icon}</span>
+               <span className="sidebar-text">{module.name}</span>
             </button>
           ))}
         </nav>
 
         <div className="sidebar-footer">
-          <div className="language-info">
-            <span className="language-icon">🌐</span>
-            {sidebarOpen && <span>{selectedLanguage}</span>}
-          </div>
-          <Link to="/language" className="sidebar-link">
-            <span className="sidebar-icon">⚙️</span>
-            {sidebarOpen && <span>Settings</span>}
-          </Link>
-          <Link to="/login" className="sidebar-link">
-            <span className="sidebar-icon">🚪</span>
-            {sidebarOpen && <span>Logout</span>}
-          </Link>
+                     <div className="language-info">
+             <span className="language-icon">🌐</span>
+             <span>{selectedLanguage}</span>
+           </div>
+           <Link to="/language" className="sidebar-link">
+             <span className="sidebar-icon">⚙️</span>
+             <span>Settings</span>
+           </Link>
+           <Link to="/login" className="sidebar-link">
+             <span className="sidebar-icon">🚪</span>
+             <span>Logout</span>
+           </Link>
         </div>
       </div>
 
@@ -432,7 +418,7 @@ const Dashboard: React.FC = () => {
         {/* Header */}
         <header className="main-header">
           <div className="header-left">
-            <h1>{sidebarModules.find(m => m.id === activeModule)?.name || 'Dashboard'}</h1>
+            <h1>Welcome User!</h1>
           </div>
           <div className="header-right">
             <div className="user-info">
