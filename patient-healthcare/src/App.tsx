@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/login';
 import Language from './pages/language';
 import Dashboard from './pages/dashboard';
+import Settings from './pages/settings';
+import Profile from './pages/profile';
 import './App.css';
 
 function App() {
@@ -12,6 +14,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/language" element={<Language />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
       </div>

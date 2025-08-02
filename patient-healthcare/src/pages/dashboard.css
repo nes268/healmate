@@ -164,8 +164,19 @@
   border-radius: 2rem;
 }
 
+.user-avatar-link {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.user-avatar-link:hover {
+  transform: scale(1.1);
+}
+
 .user-avatar {
   font-size: 1.2rem;
+  cursor: pointer;
 }
 
 .user-name {

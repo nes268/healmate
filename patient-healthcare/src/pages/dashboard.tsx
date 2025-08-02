@@ -397,20 +397,16 @@ const Dashboard: React.FC = () => {
           ))}
         </nav>
 
-        <div className="sidebar-footer">
-                     <div className="language-info">
-             <span className="language-icon">🌐</span>
-             <span>{selectedLanguage}</span>
-           </div>
-           <Link to="/language" className="sidebar-link">
-             <span className="sidebar-icon">⚙️</span>
-             <span>Settings</span>
-           </Link>
-           <Link to="/login" className="sidebar-link">
-             <span className="sidebar-icon">🚪</span>
-             <span>Logout</span>
-           </Link>
-        </div>
+                 <div className="sidebar-footer">
+            <Link to="/settings" className="sidebar-link">
+              <span className="sidebar-icon">⚙️</span>
+              <span>Settings</span>
+            </Link>
+            <Link to="/login" className="sidebar-link">
+              <span className="sidebar-icon">🚪</span>
+              <span>Logout</span>
+            </Link>
+         </div>
       </div>
 
       {/* Main Content */}
@@ -422,7 +418,9 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="header-right">
             <div className="user-info">
-              <span className="user-avatar">👤</span>
+              <Link to="/profile" className="user-avatar-link">
+                <span className="user-avatar">👤</span>
+              </Link>
               <span className="user-name">John Doe</span>
             </div>
             <div className="header-actions">
