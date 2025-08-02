@@ -416,7 +416,11 @@ const Dashboard: React.FC = () => {
             <span className="language-icon">🌐</span>
             {sidebarOpen && <span>{selectedLanguage}</span>}
           </div>
-          <Link to="/language" className="sidebar-link">
+          <Link to="/profile" className="sidebar-link">
+            <span className="sidebar-icon">👤</span>
+            {sidebarOpen && <span>Profile</span>}
+          </Link>
+          <Link to="/settings" className="sidebar-link">
             <span className="sidebar-icon">⚙</span>
             {sidebarOpen && <span>Settings</span>}
           </Link>
@@ -436,8 +440,10 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="header-right">
             <div className="user-info">
-              <span className="user-avatar">👤</span>
-              <span className="user-name">John Doe</span>
+              <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <span className="user-avatar">👤</span>
+                <span className="user-name">John Doe</span>
+              </Link>
             </div>
             <div className="header-actions">
               <button className="header-btn">🔔</button>
