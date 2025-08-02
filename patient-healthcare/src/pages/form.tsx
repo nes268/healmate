@@ -66,9 +66,10 @@ const Form: React.FC = () => {
   };
 
   const showTimeSlots = () => {
-    // This would typically navigate to a time slots page
-    // For now, we'll just submit the form
-    handleSubmit();
+    // Navigate to time slots page
+    console.log('Form submitted:', formData);
+    alert('Health assessment form submitted successfully!');
+    navigate('/timeslots');
   };
 
   const handleSubmit = (e?: React.FormEvent) => {
@@ -76,12 +77,19 @@ const Form: React.FC = () => {
     console.log('Form submitted:', formData);
     // Here you would typically send the data to your backend
     alert('Health assessment form submitted successfully!');
-    // Navigate back to options page after form completion
-    navigate('/options');
+    // Navigate to time slots page after form completion
+    navigate('/timeslots');
   };
 
   return (
     <div className="form-container">
+      {/* Floating Elements */}
+      <div className="floating-elements">
+        <div className="floating-element"></div>
+        <div className="floating-element"></div>
+        <div className="floating-element"></div>
+      </div>
+      
       <div className="form-card">
         <div className="form-header">
           <button onClick={handleBack} className="back-button">

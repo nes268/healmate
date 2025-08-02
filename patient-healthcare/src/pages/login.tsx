@@ -1,50 +1,98 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './login.css';
 
 const Login: React.FC = () => {
-  const [mobile, setMobile] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Logging in with:', { mobile, password });
-    // After successful login, redirect to language page
-    navigate('/language');
+    setIsLoading(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      console.log('Login successful:', formData);
+      setIsLoading(false);
+      navigate('/language');
+    }, 1500);
   };
 
   return (
     <div className="login-container">
-      <div className="login-box">
+      {/* Floating Elements */}
+      <div className="floating-elements">
+        <div className="floating-element"></div>
+        <div className="floating-element"></div>
+        <div className="floating-element"></div>
+      </div>
+      
+      <div className="login-card">
         <div className="login-header">
-          <div className="avatar-icon">👤</div>
-          <h2>Welcome Back</h2>
-          <p>Login to your account</p>
+          <div className="login-logo">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V9C15 10.1 14.1 11 13 11S11 10.1 11 9V7.5L5 7V9C5 10.1 4.1 11 3 11S1 10.1 1 9V7C1 6.4 1.4 6 2 6H22C22.6 6 23 6.4 23 7V9C23 10.1 22.1 11 21 11S19 10.1 19 9ZM12 8C13.1 8 14 8.9 14 10V22H10V10C10 8.9 10.9 8 12 8Z"/>
+            </svg>
+          </div>
+          <h1 className="login-title">HealMate</h1>
+          <p className="login-subtitle">Your Health, Our Priority</p>
+          <p className="login-description">Access your healthcare services with ease and convenience</p>
         </div>
-        <form className="login-form" onSubmit={handleLogin}>
-          <label>Mobile Number</label>
-          <input
-            type="tel"
-            value={mobile}
-            onChange={(e) => setMobile(e.target.value)}
-            placeholder="Enter your mobile number"
-            required
-          />
-
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            required
-          />
-
-          <button type="submit">Login</button>
+        
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="username" className="form-label">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleInputChange}
+              className="form-input"
+              placeholder="Enter your username"
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              className="form-input"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          
+          <button 
+            type="submit" 
+            className={`login-btn ${isLoading ? 'loading' : ''}`}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Signing In...' : 'Sign In'}
+          </button>
         </form>
-        <div className="signup-link">
-          Don't have an account? <Link to="/signup">Sign Up</Link>
+        
+        <div className="login-footer">
+          <a href="/language" className="language-link">
+            Change Language / भाषा बदलें
+          </a>
         </div>
       </div>
     </div>
