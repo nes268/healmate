@@ -9,8 +9,8 @@ const Language: React.FC = () => {
     console.log('Selected language:', language);
     // Store the selected language in localStorage
     localStorage.setItem('selectedLanguage', language);
-    // Navigate to dashboard/home page after language selection
-    navigate('/dashboard');
+    // Navigate to options page after language selection
+    navigate('/options');
   };
 
   return (

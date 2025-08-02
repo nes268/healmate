@@ -1,0 +1,170 @@
+.options-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.options-card {
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 2rem;
+  width: 100%;
+  max-width: 42rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.options-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: none;
+  border: none;
+  color: #667eea;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #f0f0f0;
+}
+
+.options-header h2 {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.options-header p {
+  font-size: 1.125rem;
+  color: #6b7280;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .options-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.option-button {
+  background-color: #2563eb;
+  color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+  transform: scale(1);
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.option-button:hover {
+  transform: scale(1.05);
+}
+
+.manual-option {
+  background-color: #2563eb;
+}
+
+.manual-option:hover {
+  background-color: #1d4ed8;
+}
+
+.assistance-option {
+  background-color: #16a34a;
+}
+
+.assistance-option:hover {
+  background-color: #15803d;
+}
+
+.assistance-option p {
+  color: #dcfce7;
+}
+
+.option-icon {
+  width: 4rem;
+  height: 4rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.icon-svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.option-button h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.option-button p {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.manual-option p {
+  color: #dbeafe;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .options-card {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .options-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .options-header p {
+    font-size: 1rem;
+  }
+  
+  .option-button {
+    padding: 1.5rem;
+    min-height: 150px;
+  }
+} 
