@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../App';
 import './login.css';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: ''
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -21,13 +24,16 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
     
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Login successful:', formData);
+    try {
+      await login(formData.email, formData.password);
+      navigate('/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Login failed. Please try again.');
+    } finally {
       setIsLoading(false);
-      navigate('/language');
-    }, 1500);
+    }
   };
 
   return (
@@ -52,16 +58,22 @@ const Login: React.FC = () => {
         </div>
         
         <form className="login-form" onSubmit={handleSubmit}>
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
+          
           <div className="form-group">
-            <label htmlFor="username" className="form-label">Username</label>
+            <label htmlFor="email" className="form-label">Email</label>
             <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleInputChange}
               className="form-input"
-              placeholder="Enter your username"
+              placeholder="Enter your email"
               required
             />
           </div>

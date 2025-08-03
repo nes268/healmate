@@ -1,17 +1,105 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../App';
+import { 
+  dashboardAPI, 
+  doctorsAPI, 
+  appointmentsAPI, 
+  waitTimesAPI,
+  type DashboardStats,
+  type Doctor,
+  type Appointment,
+  type WaitTime,
+  type Activity
+} from '../services/api';
 import './dashboard.css';
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
   const [activeModule, setActiveModule] = useState<string>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  
+  // API data states
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
+  const [recentActivities, setRecentActivities] = useState<Activity[]>([]);
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [waitTimes, setWaitTimes] = useState<WaitTime[]>([]);
+  // const [payments, setPayments] = useState<Payment[]>([]); // Will be used in payment module
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  
+  // Form states
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('');
 
   useEffect(() => {
     // Get the selected language from localStorage
     const language = localStorage.getItem('selectedLanguage');
     setSelectedLanguage(language || 'English');
-  }, []);
+    
+    // Load dashboard data
+    loadDashboardData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const loadDashboardData = async () => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      // Load dashboard stats and recent activities
+      const [stats, activities] = await Promise.all([
+        dashboardAPI.getStats(),
+        dashboardAPI.getRecentActivity()
+      ]);
+      
+      setDashboardStats(stats);
+      setRecentActivities(activities);
+      
+      // Load other data based on active module
+      await loadModuleData();
+    } catch (err) {
+      setError('Failed to load dashboard data');
+      console.error('Dashboard data loading error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadModuleData = async () => {
+    try {
+      switch (activeModule) {
+        case 'see-doctor': {
+          const doctorsData = await doctorsAPI.getAll(selectedSpecialty, searchQuery);
+          setDoctors(doctorsData);
+          break;
+        }
+        case 'appointments': {
+          const appointmentsData = await appointmentsAPI.getAll();
+          setAppointments(appointmentsData);
+          break;
+        }
+        case 'wait-time': {
+          const waitTimesData = await waitTimesAPI.getAll();
+          setWaitTimes(waitTimesData);
+          break;
+        }
+        case 'payment': {
+          // const paymentsData = await paymentsAPI.getAll();
+          // setPayments(paymentsData);
+          break;
+        }
+      }
+    } catch (err) {
+      console.error('Module data loading error:', err);
+    }
+  };
+
+  useEffect(() => {
+    loadModuleData();
+  }, [activeModule, searchQuery, selectedSpecialty]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const sidebarModules = [
     { id: 'dashboard', name: 'Dashboard', icon: '🏠' },
@@ -36,61 +124,66 @@ const Dashboard: React.FC = () => {
               <p>Manage your healthcare needs efficiently</p>
             </div>
             
-            <div className="quick-stats">
-              <div className="stat-card">
-                <div className="stat-icon">📊</div>
-                <div className="stat-info">
-                  <h3>5</h3>
-                  <p>Upcoming Appointments</p>
+            {loading ? (
+              <div className="loading">Loading dashboard data...</div>
+            ) : error ? (
+              <div className="error">{error}</div>
+            ) : (
+              <div className="quick-stats">
+                <div className="stat-card">
+                  <div className="stat-icon">📊</div>
+                  <div className="stat-info">
+                    <h3>{dashboardStats?.upcomingAppointments || 0}</h3>
+                    <p>Upcoming Appointments</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">💊</div>
+                  <div className="stat-info">
+                    <h3>{dashboardStats?.activePrescriptions || 0}</h3>
+                    <p>Active Prescriptions</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">🏥</div>
+                  <div className="stat-info">
+                    <h3>{dashboardStats?.totalVisits || 0}</h3>
+                    <p>Total Visits</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">💰</div>
+                  <div className="stat-info">
+                    <h3>${dashboardStats?.pendingPayments || 0}</h3>
+                    <p>Pending Payments</p>
+                  </div>
                 </div>
               </div>
-              <div className="stat-card">
-                <div className="stat-icon">💊</div>
-                <div className="stat-info">
-                  <h3>3</h3>
-                  <p>Active Prescriptions</p>
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon">🏥</div>
-                <div className="stat-info">
-                  <h3>12</h3>
-                  <p>Total Visits</p>
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon">💰</div>
-                <div className="stat-info">
-                  <h3>$150</h3>
-                  <p>Pending Payments</p>
-                </div>
-              </div>
-            </div>
+            )}
 
             <div className="recent-activity">
               <h3>Recent Activity</h3>
               <div className="activity-list">
-                <div className="activity-item">
-                  <div className="activity-icon">📅</div>
-                  <div className="activity-content">
-                    <h4>Appointment Scheduled</h4>
-                    <p>Dr. Smith - Cardiology - Tomorrow 10:00 AM</p>
+                {recentActivities.length > 0 ? (
+                  recentActivities.map((activity, index) => (
+                    <div key={index} className="activity-item">
+                      <div className="activity-icon">📅</div>
+                      <div className="activity-content">
+                        <h4>{activity.title}</h4>
+                        <p>{activity.description}</p>
+                        <small>{activity.date} at {activity.time}</small>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="activity-item">
+                    <div className="activity-icon">📋</div>
+                    <div className="activity-content">
+                      <h4>No recent activity</h4>
+                      <p>Your recent activities will appear here</p>
+                    </div>
                   </div>
-                </div>
-                <div className="activity-item">
-                  <div className="activity-icon">💳</div>
-                  <div className="activity-content">
-                    <h4>Payment Completed</h4>
-                    <p>Lab Test Payment - $75.00</p>
-                  </div>
-                </div>
-                <div className="activity-item">
-                  <div className="activity-icon">📋</div>
-                  <div className="activity-content">
-                    <h4>Prescription Updated</h4>
-                    <p>Blood pressure medication renewed</p>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -101,31 +194,50 @@ const Dashboard: React.FC = () => {
           <div className="main-content">
             <h2>Find and Book Doctor</h2>
             <div className="doctor-search">
-              <input type="text" placeholder="Search for doctors, specialties..." className="search-input" />
+              <input 
+                type="text" 
+                placeholder="Search for doctors, specialties..." 
+                className="search-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <select 
+                className="search-input"
+                value={selectedSpecialty}
+                onChange={(e) => setSelectedSpecialty(e.target.value)}
+              >
+                <option value="">All Specialties</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Laboratory">Laboratory</option>
+                <option value="Pediatrics">Pediatrics</option>
+                <option value="Orthopedics">Orthopedics</option>
+              </select>
               <button className="search-btn">Search</button>
             </div>
-            <div className="specialties-grid">
-              <div className="specialty-card">
-                <div className="specialty-icon">❤</div>
-                <h3>Cardiology</h3>
-                <p>Heart and cardiovascular health</p>
-              </div>
-              <div className="specialty-card">
-                <div className="specialty-icon">🧠</div>
-                <h3>Neurology</h3>
-                <p>Brain and nervous system</p>
-              </div>
-              <div className="specialty-card">
-                <div className="specialty-icon">👶</div>
-                <h3>Pediatrics</h3>
-                <p>Child healthcare</p>
-              </div>
-              <div className="specialty-card">
-                <div className="specialty-icon">🦴</div>
-                <h3>Orthopedics</h3>
-                <p>Bones and joints</p>
-              </div>
+            
+            <div className="doctors-grid">
+              {doctors.map((doctor) => (
+                <div key={doctor.id} className="doctor-card">
+                  <div className="doctor-image">
+                    <img src={doctor.image} alt={doctor.name} />
+                  </div>
+                  <div className="doctor-info">
+                    <h3>{doctor.name}</h3>
+                    <p className="specialty">{doctor.specialty}</p>
+                    <p className="experience">{doctor.experience} years experience</p>
+                    <div className="rating">⭐ {doctor.rating}</div>
+                    <button className="btn-primary">Book Appointment</button>
+                  </div>
+                </div>
+              ))}
             </div>
+            
+            {doctors.length === 0 && !loading && (
+              <div className="no-results">
+                <p>No doctors found matching your criteria</p>
+              </div>
+            )}
           </div>
         );
 
@@ -134,36 +246,48 @@ const Dashboard: React.FC = () => {
           <div className="main-content">
             <h2>My Appointments</h2>
             <div className="appointments-list">
-              <div className="appointment-card upcoming">
-                <div className="appointment-date">
-                  <span className="day">15</span>
-                  <span className="month">Dec</span>
+              {appointments.map((appointment) => {
+                const appointmentDate = new Date(appointment.date);
+                const isUpcoming = appointmentDate > new Date();
+                
+                return (
+                  <div key={appointment.id} className={`appointment-card ${isUpcoming ? 'upcoming' : ''}`}>
+                    <div className="appointment-date">
+                      <span className="day">{appointmentDate.getDate()}</span>
+                      <span className="month">{appointmentDate.toLocaleDateString('en-US', { month: 'short' })}</span>
+                    </div>
+                    <div className="appointment-details">
+                      <h3>{appointment.doctorName}</h3>
+                      <p>{appointment.specialty}</p>
+                      <span className="time">{appointment.time} - {new Date(`2000-01-01T${appointment.time}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
+                      {appointment.notes && <p className="notes">{appointment.notes}</p>}
+                    </div>
+                    <div className="appointment-actions">
+                      <button className="btn-primary">Reschedule</button>
+                      <button 
+                        className="btn-secondary"
+                        onClick={async () => {
+                          try {
+                            await appointmentsAPI.cancel(appointment.id);
+                            setAppointments(appointments.filter(a => a.id !== appointment.id));
+                          } catch (err) {
+                            console.error('Failed to cancel appointment:', err);
+                          }
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+              
+              {appointments.length === 0 && (
+                <div className="no-appointments">
+                  <p>No appointments found</p>
+                  <button className="btn-primary">Book New Appointment</button>
                 </div>
-                <div className="appointment-details">
-                  <h3>Dr. Sarah Johnson</h3>
-                  <p>Cardiology Consultation</p>
-                  <span className="time">10:00 AM - 11:00 AM</span>
-                </div>
-                <div className="appointment-actions">
-                  <button className="btn-primary">Reschedule</button>
-                  <button className="btn-secondary">Cancel</button>
-                </div>
-              </div>
-              <div className="appointment-card">
-                <div className="appointment-date">
-                  <span className="day">18</span>
-                  <span className="month">Dec</span>
-                </div>
-                <div className="appointment-details">
-                  <h3>Dr. Michael Chen</h3>
-                  <p>Blood Test</p>
-                  <span className="time">2:00 PM - 2:30 PM</span>
-                </div>
-                <div className="appointment-actions">
-                  <button className="btn-primary">Reschedule</button>
-                  <button className="btn-secondary">Cancel</button>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         );
@@ -173,21 +297,22 @@ const Dashboard: React.FC = () => {
           <div className="main-content">
             <h2>Current Wait Times</h2>
             <div className="wait-times">
-              <div className="wait-time-card">
-                <h3>Emergency Department</h3>
-                <div className="wait-time">45 minutes</div>
-                <div className="status moderate">Moderate Wait</div>
-              </div>
-              <div className="wait-time-card">
-                <h3>Outpatient Clinic</h3>
-                <div className="wait-time">15 minutes</div>
-                <div className="status low">Low Wait</div>
-              </div>
-              <div className="wait-time-card">
-                <h3>Radiology</h3>
-                <div className="wait-time">30 minutes</div>
-                <div className="status moderate">Moderate Wait</div>
-              </div>
+              {waitTimes.map((waitTime, index) => (
+                <div key={index} className="wait-time-card">
+                  <h3>{waitTime.department}</h3>
+                  <div className="wait-time">{waitTime.currentWait} minutes</div>
+                  <div className={`status ${waitTime.status}`}>
+                    {waitTime.status === 'low' ? 'Low Wait' : 
+                     waitTime.status === 'moderate' ? 'Moderate Wait' : 'High Wait'}
+                  </div>
+                </div>
+              ))}
+              
+              {waitTimes.length === 0 && (
+                <div className="no-wait-times">
+                  <p>No wait time information available</p>
+                </div>
+              )}
             </div>
           </div>
         );
@@ -424,10 +549,17 @@ const Dashboard: React.FC = () => {
             <span className="sidebar-icon">⚙</span>
             {sidebarOpen && <span>Settings</span>}
           </Link>
-          <Link to="/login" className="sidebar-link">
+          <button 
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+            className="sidebar-link"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left' }}
+          >
             <span className="sidebar-icon">🚪</span>
             {sidebarOpen && <span>Logout</span>}
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -442,7 +574,7 @@ const Dashboard: React.FC = () => {
             <div className="user-info">
               <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <span className="user-avatar">👤</span>
-                <span className="user-name">John Doe</span>
+                <span className="user-name">{user?.name || 'User'}</span>
               </Link>
             </div>
             <div className="header-actions">
@@ -461,4 +593,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default Dashboard;
